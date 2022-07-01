@@ -25,9 +25,11 @@ const AddCourse = () => {
   }
 
   const uploadFiles = (file) => {
-    if (!file) {
-        alert("Please choose a file first!")
+    if (!file || !materialName) {
+      alert("Please choose a file first!")
+      return 
     }
+   
 
     const storageRef = ref(storage, `/files/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file)
