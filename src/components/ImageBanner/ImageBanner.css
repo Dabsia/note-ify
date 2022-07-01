@@ -1,0 +1,16 @@
+.ImageBanner{
+    height: 100%;
+    width: 50vw;
+    padding: 2rem;
+    background: url('../../assets/giant-burger.png');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: 0 0;
+}
+
+@media screen and (max-width: 600px) {
+    .ImageBanner{
+        display: none;
+    }
+
+}
