@@ -8,7 +8,9 @@ import {toggle_modal} from '../../Redux/Actions'
 const Welcome = () => {
 
   const dispatch = useDispatch()
-  const show_modal = useSelector(state => state.toggle_modal)
+  const show_modal = useSelector(state => state.materials.toggle_modal)
+
+  
 
   return (
     <div>

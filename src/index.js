@@ -1,19 +1,23 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
+import ReactDOM from 'react-dom/client';
 import './index.css';
 import App from './App';
-import store from './Redux/rootReducer';
 import { Provider } from 'react-redux'
-import 'react-toastify/dist/ReactToastify.css';
-import { ToastContainer } from 'react-toastify';
+import {PersistGate} from 'redux-persist/integration/react'
+import {store, persistor} from './Redux/store';
+import {BrowserRouter} from 'react-router-dom'
 
 
 
-ReactDOM.render(
-  <Provider store = {store}>
-    <App />
-    <ToastContainer />
-  </Provider>,
-  document.getElementById('root')
-);
+
+const root = ReactDOM.createRoot(document.getElementById("root"))
+root.render(
+  <Provider store={store}>
+    <BrowserRouter>
+      <PersistGate persistor={persistor}>
+          <App />
+      </PersistGate>
+    </BrowserRouter>
+   </Provider>
+)
 

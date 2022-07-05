@@ -6,7 +6,7 @@ import CourseMaterial from '../courseMaterial/CourseMaterial'
 const Materials = () => {
 
     
-    const materialURLs = useSelector(state => state.materials)
+    const materialURLs = useSelector(state => state.materials.materials)
     
 
   return (

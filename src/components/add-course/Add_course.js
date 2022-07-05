@@ -34,7 +34,7 @@ const AddCourse = () => {
     const storageRef = ref(storage, `/files/${file.name}`);
     const uploadTask = uploadBytesResumable(storageRef, file)
 
-    let maxNumber = 45;
+    let maxNumber = 40;
     let randomNumber = Math.floor((Math.random() * maxNumber) + 1);
 
       uploadTask.on('state_changed', (snapshot) => {

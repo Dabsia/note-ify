@@ -18,15 +18,9 @@ import Welcome from './pages/Welcome/Welcome';
 */
 
 const App = () => {
-
-  
-
   return (
     <div className="App">
-    
       <Welcome />
-      
-      
     </div>
   );
 }
