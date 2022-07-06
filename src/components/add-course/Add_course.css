@@ -22,6 +22,7 @@
     width: 80%;
     cursor: pointer;
     margin: auto;
+    margin-bottom: .5rem;
 }
 .Add_Course_Button{
     display: block;
@@ -34,10 +35,12 @@
     border: none;
     margin-top: 2rem;
     font-size: 1rem;
-    color: #fff
+    color: #fff;
+    
 }
 .closeModal{
     position: absolute;
     top: 10px;
     right: 10px;
+    cursor: pointer;
 }

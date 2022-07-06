@@ -9,3 +9,13 @@ export const add_Course = (materialURL) => ({
     payload : materialURL
     
 })
+
+export const delete_course = (material) => ({
+    type: ActionTypes.DELETE_COURSE,
+    payload: material
+})
+
+export const filter_courses = (level) => ({
+    type: ActionTypes.FILTER_COURSES,
+    payload: level
+})

@@ -1,11 +1,18 @@
-import React from 'react'
+import React from 'react';
+import './CourseMaterial.css'
 
-const CourseMaterial = ({ url, name }) => {
+const CourseMaterial = ({ url, student, name, code, level }) => {
+
+
   return (
-    <div>
-    
+    <div className='materialContainer'>
+
+      
+      
       <p>{name}</p>
-      <a target= '_blank' href={url} rel="noreferrer noopener">{name }</a>
+      <p>{ code}</p>
+      <p>{ level}</p>
+      {student && <a target='_blank' className='downloadBtn' href={url} rel="noreferrer noopener">Download <i className="ri-download-2-line"></i></a>}
     </div>
   )
 }

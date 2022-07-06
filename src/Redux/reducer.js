@@ -15,7 +15,14 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state, materials: [...state.materials, action.payload]
             }
-        
+        // case ActionTypes.FILTER_COURSES:
+        //     return {
+        //         ...state, materials: [...state.materials, state.materials.includes(action.payload)]
+        //     }
+        // case ActionTypes.DELETE_COURSE:
+        //     return {
+        //         ...state, materials: [state.materials.filter(id => id !== action.payload)]
+        //     }
         default:
             return state
     }

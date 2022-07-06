@@ -1,0 +1,20 @@
+.materialContainer{
+    border: 1px solid black;
+    height: fit-content;
+    padding: 10px;
+    margin: .6rem;
+    width: 20%;
+    position: relative;
+}
+
+.delBtn{
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    font-size: 1.3rem;
+}
+.downloadBtn{
+    text-decoration: none;
+    cursor: pointer;
+}
