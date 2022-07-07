@@ -1,5 +1,9 @@
+:root {
+  --primary-color : #FF002E
+}
+
 .App {
-  text-align: center;
+
   overflow-x: hidden;
   margin: auto;
 }

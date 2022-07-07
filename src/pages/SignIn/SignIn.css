@@ -1,0 +1,50 @@
+.SignInContainer{
+    display: flex;
+    justify-content: space-between;
+    height: 100vh;
+    width: 100vw;
+    overflow-y: hidden;
+}
+.bookImage{
+    width: 50%;
+}
+.formHolder{
+    height: 100vh;
+    width: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.formContainer{
+    width: 70%;
+    
+    margin: auto;
+    height: 60%;
+}
+label{
+    display: block;
+    text-align: left;
+}
+.formInputs{
+    display: block;
+    height: 40px;
+    width: 100%;
+    outline: none;
+    margin-bottom: 1rem;
+    
+}
+.logInBtn{
+    width: 102%;
+    margin-top: 1rem;
+    height: 40px;
+    padding: 0 10px;
+    background-color: var(--primary-color);
+    outline: none;
+    border: none;
+    color: #fff;
+    font-size: 1.1rem;
+}
+.link{
+    color: var(--primary-color);
+    text-decoration: none;
+}
