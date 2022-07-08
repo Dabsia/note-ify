@@ -2,7 +2,8 @@ import { ActionTypes } from "./ActionTypes";
 
 const initialState = {
     toggle_modal: false,
-    materials : []
+    materials: [],
+    user: null
 }
 
 const reducer = (state = initialState, action) => {
@@ -14,6 +15,10 @@ const reducer = (state = initialState, action) => {
         case ActionTypes.ADD_COURSE: 
             return {
                 ...state, materials: [...state.materials, action.payload]
+            }
+        case ActionTypes.CREATE_NEW_USER:
+            return {
+                ...state, user: action.payload
             }
         // case ActionTypes.FILTER_COURSES:
         //     return {

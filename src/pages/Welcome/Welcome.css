@@ -1,0 +1,9 @@
+.addCourse{
+    background-color: var(--primary-color);
+    color: #fff;
+    outline: none;
+    border: none;
+    font-size: 1rem;
+    margin-top: 1rem;
+    padding: .5rem;
+}

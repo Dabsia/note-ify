@@ -19,3 +19,8 @@ export const filter_courses = (level) => ({
     type: ActionTypes.FILTER_COURSES,
     payload: level
 })
+
+export const create_new_user = (user) => ({
+    type: ActionTypes.CREATE_NEW_USER,
+    payload: user
+})
