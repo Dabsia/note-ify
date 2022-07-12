@@ -1,14 +1,16 @@
-import React, { useState} from 'react'
+import React, {useState} from 'react'
 import { storage } from '../../firebase/config'
 import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
 import './Add_course.css'
-import { useDispatch} from 'react-redux'
+import { useDispatch, useSelector} from 'react-redux'
 import { toggle_modal } from '../../Redux/Actions'
 import { add_Course } from '../../Redux/Actions'
 
 const AddCourse = () => {
 
   const dispatch = useDispatch()
+  const materialURL = useSelector(state => state.materials.materials)
+  console.log(materialURL)
 
   const [progress, setProgress] = useState(0)
   const [materialName, setMaterialName] = useState('')
@@ -24,6 +26,15 @@ const AddCourse = () => {
   const submitForm = (e) => {
     e.preventDefault()
     uploadFiles(file)
+
+      fetch('https://note-ify-99caa-default-rtdb.firebaseio.com/materials.json', {
+          method : 'POST',
+          body: JSON.stringify(materialURL),
+          headers: {
+            'Content-Type' : 'application/json'
+          }
+        }).then(res => res.json()).then(data => console.log(data))
+    
   }
 
   const uploadFiles = (file) => {
@@ -57,6 +68,8 @@ const AddCourse = () => {
       }
     )
   }
+
+
 
 
 

@@ -24,3 +24,7 @@ export const create_new_user = (user) => ({
     type: ActionTypes.CREATE_NEW_USER,
     payload: user
 })
+
+export const logout = () => ({
+    type: ActionTypes.LOGOUT
+})

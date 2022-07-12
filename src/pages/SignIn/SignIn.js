@@ -39,7 +39,7 @@ const SignIn = () => {
       setIsLoading(false)
       if (res.ok){
           console.log('Login Successful')
-          Navigate('/')
+          Navigate('/lecturer')
         return res.json()
       }
       // Show Auth Message if failed

@@ -3,7 +3,8 @@ import { ActionTypes } from "./ActionTypes";
 const initialState = {
     toggle_modal: false,
     materials: [],
-    user: null
+    user: null,
+    isLoggedIn: false
 }
 
 const reducer = (state = initialState, action) => {
@@ -18,7 +19,11 @@ const reducer = (state = initialState, action) => {
             }
         case ActionTypes.CREATE_NEW_USER:
             return {
-                ...state, user: action.payload
+                ...state, user: action.payload, isLoggedIn: true
+            }
+        case ActionTypes.LOGOUT:
+            return {
+                ...state, user: null, isLoggedIn: false
             }
         // case ActionTypes.FILTER_COURSES:
         //     return {

@@ -14,7 +14,7 @@ const Student = () => {
     <div>
       <h3>Download Your Reading Material</h3>
       <p>{ selectedValue}</p>
-      <p>Filter through the material you want to download</p>
+      <p>Filter through by levels</p>
       <select className='select' value = {selectedValue} onChange = { e => dispatch(filter_courses(e.target.value))  }>
         <option></option>
         <option name = 'level'>100</option>
