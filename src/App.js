@@ -6,13 +6,18 @@ import Student from './pages/Student/Student';
 import SignIn from './pages/SignIn/SignIn';
 import SignUp from './pages/SignUp/SignUp';
 import Home from './pages/Home/Home';
+import { useSelector } from 'react-redux';
 
 const App = () => {
+
+  const isAuthenticated = useSelector(state => state.materials.isLoggedIn)
+  
+
   return (
     <div className="App">
       
       <Routes>
-        <Route path='/lecturer' element={<LecturerHome />} />
+        <Route path='/lecturer' element={isAuthenticated? <LecturerHome /> : <SignIn /> } />
         <Route path = '/' element = {<Home />} />
         <Route path='/student' element={<Student />} />
         <Route path='/signin' element={<SignIn />} />

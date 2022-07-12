@@ -9,7 +9,7 @@ import { add_Course } from '../../Redux/Actions'
 const AddCourse = () => {
 
   const dispatch = useDispatch()
-  const materialURL = useSelector(state => state.materials.materials)
+  const materialURL = useSelector(state => state.materials.books)
   console.log(materialURL)
 
   const [progress, setProgress] = useState(0)
@@ -29,7 +29,7 @@ const AddCourse = () => {
 
       fetch('https://note-ify-99caa-default-rtdb.firebaseio.com/materials.json', {
           method : 'POST',
-          body: JSON.stringify(materialURL),
+          body: JSON.stringify({materialURL}),
           headers: {
             'Content-Type' : 'application/json'
           }

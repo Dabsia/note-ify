@@ -2,7 +2,7 @@ import { ActionTypes } from "./ActionTypes";
 
 const initialState = {
     toggle_modal: false,
-    materials: [],
+    books: [],
     user: null,
     isLoggedIn: false
 }

@@ -71,7 +71,8 @@ const SignUp = () => {
 
   return (
       <div className='SignInContainer'>
-          <img className='bookImage' src={book} alt='book' />
+      <img className='bookImage' src={book} alt='book' />
+      <button onClick={() => Navigate('/')} className='backBtn'>Go Back Home</button>
           <div className='formHolder'>
             <form className='formContainer' onSubmit={SubMitForm}>
              <label htmlFor='name'>Name</label>

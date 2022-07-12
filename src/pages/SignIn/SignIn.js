@@ -1,9 +1,13 @@
 import React, { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import book from '../../assets/book.png'
+import { useDispatch } from 'react-redux'
+import { create_new_user } from '../../Redux/Actions'
 import './SignIn.css'
 
 const SignIn = () => {
+
+  const dispatch = useDispatch()
 
     const [email, setEmail] = useState('')
     const [password, setPassword] = useState('')
@@ -20,7 +24,11 @@ const SignIn = () => {
         if ( !email || password.length === 0) { 
             alert('Please fill in the form correctly')
             return  
-        } 
+      } 
+      
+      const user = {
+        email
+      }
         
         setIsLoading(true)
     // Submitting the user input to firebase 
@@ -39,7 +47,8 @@ const SignIn = () => {
       setIsLoading(false)
       if (res.ok){
           console.log('Login Successful')
-          Navigate('/lecturer')
+        Navigate('/lecturer')
+        dispatch(create_new_user(user))
         return res.json()
       }
       // Show Auth Message if failed
@@ -59,7 +68,8 @@ const SignIn = () => {
 
   return (
       <div className='SignInContainer'>
-          <img className='bookImage' src={book} alt='book' />
+      <img className='bookImage' src={book} alt='book' />
+      <button onClick={() => Navigate('/')} className='backBtn'>Go Back Home</button>
           <div className='formHolder'>
             <form className='formContainer' onSubmit={SubMitForm}>
                 <label htmlFor='email'>Email</label>
