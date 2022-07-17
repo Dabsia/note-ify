@@ -4,7 +4,8 @@ const initialState = {
     toggle_modal: false,
     books: [],
     user: null,
-    isLoggedIn: false
+    isLoggedIn: false,
+    filteredBooks: []
 }
 
 const reducer = (state = initialState, action) => {
@@ -15,7 +16,7 @@ const reducer = (state = initialState, action) => {
             }
         case ActionTypes.ADD_COURSE: 
             return {
-                ...state, materials: [...state.materials, action.payload]
+                ...state, books: [...state.books, action.payload]
             }
         case ActionTypes.CREATE_NEW_USER:
             return {
@@ -25,14 +26,16 @@ const reducer = (state = initialState, action) => {
             return {
                 ...state, user: null, isLoggedIn: false
             }
-        // case ActionTypes.FILTER_COURSES:
-        //     return {
-        //         ...state, materials: [...state.materials, state.materials.includes(action.payload)]
-        //     }
-        // case ActionTypes.DELETE_COURSE:
-        //     return {
-        //         ...state, materials: [state.materials.filter(id => id !== action.payload)]
-        //     }
+        case ActionTypes.FILTER_COURSES:
+            return {
+                ...state, filteredBooks: state.books.filter((book) => {
+                   return book.materialLevel === action.payload
+                })
+            }
+        case ActionTypes.DELETE_COURSE:
+            return {
+                ...state, books: state.books.filter(book => book.idx !== action.payload)
+            }
         default:
             return state
     }

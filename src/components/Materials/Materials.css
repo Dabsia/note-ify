@@ -7,3 +7,8 @@
     /* margin: auto; */
     flex-wrap: wrap;
 }
+
+.filteredResult{
+    text-align: center;
+    color: red;
+}

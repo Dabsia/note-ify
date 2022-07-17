@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 
 const Student = () => {
 
-  const [selectedValue, setSelecetedValue] = useState(null)
+  const [selectedValue, setSelecetedValue] = useState('')
 
   const dispatch = useDispatch()
 
@@ -15,7 +15,10 @@ const Student = () => {
       <h3>Download Your Reading Material</h3>
       <p>{ selectedValue}</p>
       <p>Filter through by levels</p>
-      <select className='select' value = {selectedValue} onChange = { e => dispatch(filter_courses(e.target.value))  }>
+      <select className='select' value={selectedValue} onChange={e => {
+        setSelecetedValue(e.target.value)
+        dispatch(filter_courses(e.target.value))
+      }}>
         <option></option>
         <option name = 'level'>100</option>
         <option name = 'level'>200</option>
@@ -30,7 +33,7 @@ const Student = () => {
       
     
 
-      <Materials student={ true} />
+      <Materials student={ true} selectedValue = {selectedValue} />
     </div>
   )
 }

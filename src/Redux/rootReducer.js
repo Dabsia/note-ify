@@ -6,7 +6,7 @@ import reducer from "./reducer";
 const persistConfig = {
     key: 'root',
     storage,
-    whitelist: ['materials']
+    // whitelist: ['materials']
 }
 
 const rootReducer = combineReducers({

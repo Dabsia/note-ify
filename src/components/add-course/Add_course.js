@@ -10,7 +10,6 @@ const AddCourse = () => {
 
   const dispatch = useDispatch()
   const materialURL = useSelector(state => state.materials.books)
-  console.log(materialURL)
 
   const [progress, setProgress] = useState(0)
   const [materialName, setMaterialName] = useState('')
@@ -18,6 +17,7 @@ const AddCourse = () => {
   const [materialLevel, setMaterialLevel] = useState('')
   const [file, setFile] = useState(null)
   
+  var idx = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10)
 
   const handleChange = (e) => {
     setFile(e.target.files[0])
@@ -58,12 +58,12 @@ const AddCourse = () => {
     
       () => {
         getDownloadURL(uploadTask.snapshot.ref)
-          .then((url, id) => dispatch(add_Course({
+          .then((url) => dispatch(add_Course({
             url,
             materialName, 
             materialCode,
             materialLevel,
-            id
+            idx
           })))
       }
     )
