@@ -81,7 +81,7 @@ const SignUp = () => {
                 <input className='formInputs' name='email' id='email' type='email' onChange={e => setEmail(e.target.value)} value={email} />
                 <label htmlFor='password'>Password</label>
                   <input className='formInputs' name='password' id='password' type='password' onChange={e => setPassword(e.target.value)} value={password} />
-                <button className='logInBtn'>{ !isLoading ? 'Created Account' : 'Loading...'}</button>
+                <button className='logInBtn'>{ !isLoading ? 'Create Account' : 'Loading...'}</button>
                 <p>Already have an Account? <Link className='link' to = '/signin'>Log In</Link></p>
             </form>
           </div>

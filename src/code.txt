@@ -1,0 +1,647 @@
+Add Courses component
+
+import React, {useState} from 'react'
+import { storage } from '../../firebase/config'
+import { getDownloadURL, ref, uploadBytesResumable } from 'firebase/storage'
+import './Add_course.css'
+import { useDispatch, useSelector} from 'react-redux'
+import { toggle_modal } from '../../Redux/Actions'
+import { add_Course } from '../../Redux/Actions'
+
+const AddCourse = () => {
+
+  const dispatch = useDispatch()
+  const materialURL = useSelector(state => state.materials.books)
+
+  const [progress, setProgress] = useState(0)
+  const [materialName, setMaterialName] = useState('')
+  const [materialCode, setMaterialCode] = useState('')
+  const [materialLevel, setMaterialLevel] = useState('')
+  const [file, setFile] = useState(null)
+  
+  var idx = Math.random().toString(36).substring(2, 10) + Math.random().toString(36).substring(2, 10)
+
+  const handleChange = (e) => {
+    setFile(e.target.files[0])
+  }
+
+  const submitForm = (e) => {
+    e.preventDefault()
+    uploadFiles(file)
+
+      fetch('https://note-ify-99caa-default-rtdb.firebaseio.com/materials.json', {
+          method : 'POST',
+          body: JSON.stringify({materialURL}),
+          headers: {
+            'Content-Type' : 'application/json'
+          }
+        }).then(res => res.json()).then(data => console.log(data))
+    
+  }
+
+  const uploadFiles = (file) => {
+    if (!file || !materialName || !materialCode || !materialLevel ) {
+      alert("Please Enter all details first!")
+      return 
+    }
+   
+
+    const storageRef = ref(storage, `/files/${file.name}`);
+    const uploadTask = uploadBytesResumable(storageRef, file)
+
+
+      uploadTask.on('state_changed', (snapshot) => {
+      const prog = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100)
+      if (prog === 100) {
+        alert('Successfully Uploaded the material')
+      }
+      setProgress(prog)
+    }, (err) => console.log(err),
+    
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref)
+          .then((url) => dispatch(add_Course({
+            url,
+            materialName, 
+            materialCode,
+            materialLevel,
+            idx
+          })))
+      }
+    )
+  }
+
+
+
+
+
+  return (
+      <div className='Add_course'>
+        <form className='addCourseForm' onSubmit={submitForm}>
+        <input className='Add_Course_input' name='file' type='file' onChange={handleChange} />
+        <input className='Add_Course_input' placeholder='Enter Material Name' name='coursename' type='text' onChange={(e) => setMaterialName(e.target.value)} value={materialName} />
+        <input className='Add_Course_input' placeholder='Enter Course Code' name='coursecode' type='text' onChange={(e) => setMaterialCode(e.target.value)} value={materialCode} />
+        <input className='Add_Course_input' placeholder='Enter Level' name='level' type='text' onChange={(e) => setMaterialLevel(e.target.value)} value = {materialLevel} />
+        <button className='Add_Course_Button' >Upload Course Material</button>
+        <p>Uploaded: { progress}%</p>
+      </form>
+      <button className='closeModal' onClick={() => dispatch(toggle_modal())}>X</button>  
+      
+      </div>
+  )
+}
+
+export default AddCourse
+
+
+Course Material Component
+
+import React from 'react';
+import { useDispatch } from 'react-redux';
+import './CourseMaterial.css'
+import { delete_course } from '../../Redux/Actions';
+
+const CourseMaterial = ({ url, student, name, code, level, deleteCourse, idx }) => {
+
+  const dispatch = useDispatch()
+
+  return (
+    <div className='materialContainer'>
+      {deleteCourse && <i onClick={() => {
+        dispatch(delete_course(idx))
+      }} className="ri-close-fill delBtn"></i>}
+      <p>{name}</p>
+      <p>{ code}</p>
+      <p>{ level}</p>
+      {student && <a target='_blank' className='downloadBtn' href={url} rel="noreferrer noopener">Download <i className="ri-download-2-line"></i></a>}
+    </div>
+  )
+}
+
+export default CourseMaterial
+
+Material Component
+
+import React from 'react'
+import './Materials.css'
+import {useSelector} from 'react-redux'
+import CourseMaterial from '../courseMaterial/CourseMaterial'
+
+const Materials = ({student, selectedValue}) => {
+  const materialURLs = useSelector(state => state.materials.books)
+  const filteredBooks = useSelector(state => state.materials.filteredBooks)
+
+
+
+  return (
+    <div className='materialsList'>
+      {student && ((selectedValue.length >= 1 && filteredBooks.length > 0) ? <p>Filter Result:</p> : (selectedValue.length >= 1 && filteredBooks <= 0) && <p>No result matching filter.</p>)}
+        {student ?
+              filteredBooks.length === 0 ? (
+                      materialURLs.map((materialURL, idx) => {
+                          return <CourseMaterial id = {idx} key={idx} student = {student} url={materialURL.url} name={ materialURL.materialName} deleteCourse = {false} level={ materialURL.materialLevel} code={ materialURL.materialCode} />      
+                } )          
+              ) : (
+                      filteredBooks.map((materialURL, idx) => {
+                          return <CourseMaterial id = {idx} key={idx} student = {student} url={materialURL.url} name={ materialURL.materialName} level={ materialURL.materialLevel} code={ materialURL.materialCode} />      
+                } )          
+              )
+        :  materialURLs.length === 0 ? (
+                  <p>No Material Found</p>
+              ) : (
+                      materialURLs.map((materialURL, idx) => {
+                          return <CourseMaterial idx = {materialURL.idx} key={idx} student = {student} url={materialURL.url} name={ materialURL.materialName} deleteCourse = {true} level={ materialURL.materialLevel} code={ materialURL.materialCode} />      
+                } )          
+              )}
+      </div>
+  )
+}
+
+export default Materials
+
+Firebase Component
+
+import { initializeApp } from 'firebase/app'
+import { getStorage } from 'firebase/storage';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAwN3IIOeleFsF04R8Q67ih0wlo9wYbUAo",
+  authDomain: "note-ify-99caa.firebaseapp.com",
+  databaseURL: "https://note-ify-99caa-default-rtdb.firebaseio.com",
+  projectId: "note-ify-99caa",
+  storageBucket: "note-ify-99caa.appspot.com",
+  messagingSenderId: "966722318386",
+  appId: "1:966722318386:web:1e35044987410c49164c2b",
+  measurementId: "G-3ENLMY02JG"
+};
+
+export const app = initializeApp(firebaseConfig)
+export const storage = getStorage(app)
+
+
+Home Page Component
+
+import React from 'react'
+import { useNavigate } from 'react-router-dom'
+
+const Home = () => {
+
+  const Navigate = useNavigate()
+
+  return (
+    <div>
+      <h2>Welcome</h2>
+      <h3>What category are you?</h3>
+      <button onClick={() => Navigate('/student')}>Student</button>
+      <button onClick={() => Navigate('/lecturer')}>Lecturer</button>
+    </div>
+  )
+}
+
+export default Home
+
+
+Lecturer Home Component
+
+import React from 'react'
+import Welcome from '../Welcome/Welcome'
+import './LecturerHome.css'
+import Navigation from '../../components/Navigation/Navigation'
+
+const LecturerHome = () => {
+  return (
+      <div className='LecturerHomeContainer'>
+          <Navigation />
+          <Welcome />
+      </div>
+  )
+}
+
+export default LecturerHome
+
+SignImn Component
+
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import book from '../../assets/book.png'
+import { useDispatch } from 'react-redux'
+import { create_new_user } from '../../Redux/Actions'
+import './SignIn.css'
+
+const SignIn = () => {
+
+  const dispatch = useDispatch()
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+
+    const [isLoading, setIsLoading] = useState(false)
+
+    const Navigate = useNavigate()
+
+    const API_KEY = 'AIzaSyAwN3IIOeleFsF04R8Q67ih0wlo9wYbUAo'
+    
+    const SubMitForm = (e) => {
+        e.preventDefault()
+        
+        if ( !email || password.length === 0) { 
+            alert('Please fill in the form correctly')
+            return  
+      } 
+      
+      const user = {
+        email
+      }
+        
+        setIsLoading(true)
+    // Submitting the user input to firebase 
+    fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=${API_KEY}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        returnSecureToken: true
+      }),
+      headers: {
+        'Content-Type' : 'application/json'
+      }
+    }).then(res => {
+      
+      setIsLoading(false)
+      if (res.ok){
+          console.log('Login Successful')
+        Navigate('/lecturer')
+        dispatch(create_new_user(user))
+        return res.json()
+      }
+      // Show Auth Message if failed
+      else{
+        return res.json().then(data => {
+          console.log(data)
+          let errorMessage = 'Authentication Failed'
+          if (data && data.error && data.error.message) {
+            errorMessage = data.error.message
+            }
+            alert(errorMessage)
+          throw new Error(errorMessage);
+        });
+      }
+    })
+    }
+
+  return (
+      <div className='SignInContainer'>
+      <img className='bookImage' src={book} alt='book' />
+      <button onClick={() => Navigate('/')} className='backBtn'>Go Back Home</button>
+          <div className='formHolder'>
+            <form className='formContainer' onSubmit={SubMitForm}>
+                <label htmlFor='email'>Email</label>
+                <input className='formInputs' name='email' id='email' type='email' onChange={e => setEmail(e.target.value)} value={email} />
+                <label htmlFor='password'>Password</label>
+                <input className='formInputs' name='password' id='password' type='password' onChange={e => setPassword(e.target.value)} value={password} />
+                <button className='logInBtn'>{!isLoading ? 'Log In': 'Loading...'}</button>
+                <p>Don't have an Account? <Link className='link' to = '/signup'>Create Account</Link></p>
+            </form>
+          </div>
+      </div>
+  )
+}
+
+export default SignIn
+
+
+Signup Component
+
+import React, { useState } from 'react'
+import { Link, useNavigate } from 'react-router-dom'
+import book from '../../assets/book.png'
+import { create_new_user } from '../../Redux/Actions'
+import { useDispatch } from 'react-redux'
+import '../SignIn/SignIn.css'
+
+const SignUp = () => {
+  const dispatch = useDispatch()
+
+    const [email, setEmail] = useState('')
+    const [password, setPassword] = useState('')
+    const [name, setName] = useState('')
+  
+  const [isLoading, setIsLoading] = useState(false)
+  
+  const Navigate = useNavigate()
+
+  const API_KEY = 'AIzaSyAwN3IIOeleFsF04R8Q67ih0wlo9wYbUAo'
+    
+    const SubMitForm = (e) => {
+        e.preventDefault()
+        if (!name || !email || password.length === 0) { 
+            alert('Please fill in the form correctly')
+            return  
+      } 
+      const user = {
+        email, name, password
+      }
+      
+      setIsLoading(true)
+    fetch(`https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=${API_KEY}`, {
+      method: 'POST',
+      body: JSON.stringify({
+        email: email,
+        password: password,
+        returnSecureToken: true
+      }),
+      headers: {
+        'Content-Type' : 'application/json'
+      }
+    }).then(res => {
+      setIsLoading(false)
+      if (res.ok){
+        // Sending the user datails to firebase
+
+        fetch('https://note-ify-99caa-default-rtdb.firebaseio.com/users.json', {
+          method : 'POST',
+          body: JSON.stringify(user),
+          headers: {
+            'Content-Type' : 'application/json'
+          }
+        }).then(res => res.json()).then(data => console.log(data))
+
+
+        dispatch(create_new_user(user))
+        Navigate('/signin')
+      }
+      else{
+        return res.json().then(data => {
+          let errorMessage = 'Authentication Failed'
+          if (data && data.error && data.error.message) {
+            errorMessage = data.error.message
+          }
+          alert(errorMessage)
+        });
+      }
+    })
+
+    }
+
+  return (
+      <div className='SignInContainer'>
+      <img className='bookImage' src={book} alt='book' />
+      <button onClick={() => Navigate('/')} className='backBtn'>Go Back Home</button>
+          <div className='formHolder'>
+            <form className='formContainer' onSubmit={SubMitForm}>
+             <label htmlFor='name'>Name</label>
+                <input className='formInputs' name='name' id='name' type='name' onChange={e => setName(e.target.value)} value={name} />
+                <label htmlFor='email'>Email</label>
+                <input className='formInputs' name='email' id='email' type='email' onChange={e => setEmail(e.target.value)} value={email} />
+                <label htmlFor='password'>Password</label>
+                  <input className='formInputs' name='password' id='password' type='password' onChange={e => setPassword(e.target.value)} value={password} />
+                <button className='logInBtn'>{ !isLoading ? 'Created Account' : 'Loading...'}</button>
+                <p>Already have an Account? <Link className='link' to = '/signin'>Log In</Link></p>
+            </form>
+          </div>
+      </div>
+  )
+}
+
+export default SignUp
+
+Student Component
+
+import React, {useState} from 'react'
+import Materials from '../../components/Materials/Materials'
+import './Student.css'
+import { filter_courses } from '../../Redux/Actions'
+import { useDispatch } from 'react-redux'
+
+const Student = () => {
+
+  const [selectedValue, setSelecetedValue] = useState('')
+
+  const dispatch = useDispatch()
+
+  return (
+    <div>
+      <h3>Download Your Reading Material</h3>
+      <p>{ selectedValue}</p>
+      <p>Filter through by levels</p>
+      <select className='select' value={selectedValue} onChange={e => {
+        setSelecetedValue(e.target.value)
+        dispatch(filter_courses(e.target.value))
+      }}>
+        <option></option>
+        <option name = 'level'>100</option>
+        <option name = 'level'>200</option>
+        <option name = 'level'>300</option>
+        <option name = 'level'>400</option>
+        <option name = 'level'>500</option>
+      </select>
+
+      {/*
+          const filteredMaterials = materials.materials.filter(material => material.name.lowerCase().includes(selectedValue)})
+    */}
+      
+    
+
+      <Materials student={ true} selectedValue = {selectedValue} />
+    </div>
+  )
+}
+
+export default Student
+
+Welcome Component
+
+import React from 'react'
+import AddCourse from '../../components/add-course/Add_course'
+import Materials from '../../components/Materials/Materials'
+import { useDispatch, useSelector } from 'react-redux'
+import {toggle_modal} from '../../Redux/Actions'
+import './Welcome.css'
+
+const Welcome = () => {
+
+  const dispatch = useDispatch()
+  const show_modal = useSelector(state => state.materials.toggle_modal)
+
+  
+  
+
+  return (
+    <div>
+      {!show_modal && <button className='addCourse' onClick={() => dispatch(toggle_modal())}>Add Course Material</button>}
+      {!show_modal && <Materials />}
+      {show_modal && <AddCourse />}
+    </div>
+  )
+}
+
+export default Welcome
+
+
+Actions.js
+
+import { ActionTypes } from "./ActionTypes";
+
+export const toggle_modal = () => ({
+    type: ActionTypes.TOGGLE_MODAL
+})
+
+export const add_Course = (materialURL) => ({
+    type: ActionTypes.ADD_COURSE,
+    payload : materialURL
+    
+})
+
+export const delete_course = (idx) => ({
+    type: ActionTypes.DELETE_COURSE,
+    payload: idx
+})
+
+export const filter_courses = (level) => ({
+    type: ActionTypes.FILTER_COURSES,
+    payload: level
+})
+
+export const create_new_user = (user) => ({
+    type: ActionTypes.CREATE_NEW_USER,
+    payload: user
+})
+
+export const logout = () => ({
+    type: ActionTypes.LOGOUT
+})
+
+ActionTypes
+
+export const ActionTypes = {
+    TOGGLE_MODAL: 'TOGGLE_MODAL',
+    ADD_COURSE: 'ADD_COURSE',
+    DELETE_COURSE: 'DELETE_COURSE',
+    FILTER_COURSES: 'FILTER_COURSES',
+    CREATE_NEW_USER: 'CREATE_NEW_USER',
+    LOGOUT: 'LOGOUT'
+}
+
+
+Reducer.js
+
+import { ActionTypes } from "./ActionTypes";
+
+const initialState = {
+    toggle_modal: false,
+    books: [],
+    user: null,
+    isLoggedIn: false,
+    filteredBooks: []
+}
+
+const reducer = (state = initialState, action) => {
+    switch (action.type) {
+        case ActionTypes.TOGGLE_MODAL:
+            return {
+                ...state, toggle_modal: !state.toggle_modal
+            }
+        case ActionTypes.ADD_COURSE: 
+            return {
+                ...state, books: [...state.books, action.payload]
+            }
+        case ActionTypes.CREATE_NEW_USER:
+            return {
+                ...state, user: action.payload, isLoggedIn: true
+            }
+        case ActionTypes.LOGOUT:
+            return {
+                ...state, user: null, isLoggedIn: false
+            }
+        case ActionTypes.FILTER_COURSES:
+            return {
+                ...state, filteredBooks: state.books.filter((book) => {
+                   return book.materialLevel === action.payload
+                })
+            }
+        case ActionTypes.DELETE_COURSE:
+            return {
+                ...state, books: state.books.filter(book => book.idx !== action.payload)
+            }
+        default:
+            return state
+    }
+}
+
+export default reducer
+
+Store.js
+
+import rootReducer from './rootReducer';
+import { createStore, applyMiddleware } from "redux";
+import logger from 'redux-logger'
+import { persistStore } from 'redux-persist'
+import thunk  from 'redux-thunk';
+
+
+const middlewares = [logger, thunk];
+
+export const store = createStore(rootReducer, applyMiddleware(...middlewares))
+
+export const persistor = persistStore(store)
+
+App.js
+
+import React from 'react'
+import {Routes, Route} from 'react-router-dom'
+import './App.css';
+import LecturerHome from './pages/LecturerHome/LecturerHome';
+import Student from './pages/Student/Student';
+import SignIn from './pages/SignIn/SignIn';
+import SignUp from './pages/SignUp/SignUp';
+import Home from './pages/Home/Home';
+import { useSelector } from 'react-redux';
+
+const App = () => {
+
+  const isAuthenticated = useSelector(state => state.materials.isLoggedIn)
+  
+
+  return (
+    <div className="App">
+      
+      <Routes>
+        <Route path='/lecturer' element={isAuthenticated? <LecturerHome /> : <SignIn /> } />
+        <Route path = '/' element = {<Home />} />
+        <Route path='/student' element={<Student />} />
+        <Route path='/signin' element={<SignIn />} />
+        <Route path = '/signup' element = {<SignUp />} />
+      </Routes>
+      
+    </div>
+  );
+}
+
+export default App;
+
+
+index.js
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import './index.css';
+import App from './App';
+import { Provider } from 'react-redux'
+import {PersistGate} from 'redux-persist/integration/react'
+import {store, persistor} from './Redux/store';
+import {BrowserRouter} from 'react-router-dom'
+
+
+
+
+const root = ReactDOM.createRoot(document.getElementById("root"))
+root.render(
+  <Provider store={store}>
+    <BrowserRouter>
+      <PersistGate persistor={persistor}>
+          <App />
+      </PersistGate>
+    </BrowserRouter>
+   </Provider>
+)
+

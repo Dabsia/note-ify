@@ -27,12 +27,6 @@ const Student = () => {
         <option name = 'level'>500</option>
       </select>
 
-      {/*
-          const filteredMaterials = materials.materials.filter(material => material.name.lowerCase().includes(selectedValue)})
-    */}
-      
-    
-
       <Materials student={ true} selectedValue = {selectedValue} />
     </div>
   )
