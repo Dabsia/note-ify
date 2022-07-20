@@ -5,7 +5,9 @@
     margin: .6rem;
     width: 20%;
     position: relative;
-    background-color: var(--primary-color)
+    color: #fff;
+    background-color: var(--primary-color);
+    border: none;
 }
 
 .delBtn{
@@ -18,4 +20,5 @@
 .downloadBtn{
     text-decoration: none;
     cursor: pointer;
+    color: #fff
 }

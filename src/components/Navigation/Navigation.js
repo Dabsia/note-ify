@@ -18,7 +18,7 @@ const Navigation = () => {
 
   return (
     <nav className='nav'>
-              <img className='logo' src={logo} alt='logo' />
+              <img className='logo' onClick = {() => Navigate('/')} src={logo} alt='logo' />
               <button onClick={logoutHandler} className='logoutBtn'>Logout</button>
     </nav>
   )

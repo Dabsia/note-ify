@@ -1,9 +1,12 @@
 .button{
-    background-color: var(--main-color);
+    background-color: var(--primary-color);
     color: #fff;
     padding: .5rem 1rem;
     border: none;
     outline: none;
     cursor: pointer;
+    position: absolute;
+    top: 20px;
+    left: 20px;
     
 }

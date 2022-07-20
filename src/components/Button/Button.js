@@ -2,7 +2,7 @@ import React from 'react'
 import { useNavigate } from 'react-router-dom'
 import './Button.css'
 
-const Button = ({text, path}) => {
+const Button = ({text}) => {
 
   const Navigate = useNavigate()
 

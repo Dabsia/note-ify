@@ -10,6 +10,7 @@ const AddCourse = () => {
 
   const dispatch = useDispatch()
   const materialURL = useSelector(state => state.materials.books)
+  const lecturerEmail = useSelector(state => state.materials.user.email)
 
   const [progress, setProgress] = useState(0)
   const [materialName, setMaterialName] = useState('')
@@ -63,7 +64,8 @@ const AddCourse = () => {
             materialName, 
             materialCode,
             materialLevel,
-            idx
+            idx,
+            lecturerEmail
           })))
       }
     )
