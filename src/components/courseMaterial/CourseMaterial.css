@@ -5,6 +5,7 @@
     margin: .6rem;
     width: 20%;
     position: relative;
+    background-color: var(--primary-color)
 }
 
 .delBtn{
