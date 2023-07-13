@@ -35,3 +35,15 @@ h2{
     outline: none;
     cursor: pointer;
 }
+
+@media screen and (max-width: 800px){
+    .CenterDiv{
+        width: 50%;
+    }
+}
+
+@media screen and (max-width: 500px) {
+    .CenterDiv {
+        width: 80%;
+    }
+}

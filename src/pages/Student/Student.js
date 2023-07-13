@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, { useState } from 'react'
 import Materials from '../../components/Materials/Materials'
 import './Student.css'
 import { filter_courses } from '../../Redux/Actions'
@@ -13,8 +13,8 @@ const Student = () => {
 
   return (
     <div>
-      <Button text = 'Home' path = 'home'/>
-      <h3>Download Your Reading Material</h3>
+      <Button text='Home' path='home' />
+      <h3 className='readingMaterialsText' >Download Your Reading Material</h3>
       <p>Filter through by levels</p>
       <p>The email of the lecturer is on the material. Incase you have any issues</p>
       <select className='select' value={selectedValue} onChange={e => {
@@ -22,14 +22,14 @@ const Student = () => {
         dispatch(filter_courses(e.target.value))
       }}>
         <option></option>
-        <option name = 'level'>100</option>
-        <option name = 'level'>200</option>
-        <option name = 'level'>300</option>
-        <option name = 'level'>400</option>
-        <option name = 'level'>500</option>
+        <option name='level'>100</option>
+        <option name='level'>200</option>
+        <option name='level'>300</option>
+        <option name='level'>400</option>
+        <option name='level'>500</option>
       </select>
 
-      <Materials student={ true} selectedValue = {selectedValue} />
+      <Materials student={true} selectedValue={selectedValue} />
     </div>
   )
 }

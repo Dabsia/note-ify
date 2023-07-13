@@ -3,3 +3,13 @@
     height: 25px;
     outline: none
 }
+
+@media screen and (max-width: 550px){
+    .readingMaterialsText{
+        margin-top: 5rem;
+    }
+    .select{
+        width: 80%;
+    }
+
+}

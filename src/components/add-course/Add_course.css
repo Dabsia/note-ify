@@ -44,3 +44,17 @@
     right: 10px;
     cursor: pointer;
 }
+
+@media screen and (max-width: 750px) {
+    .addCourseForm {
+            width: 60%;
+            
+        }
+}
+
+@media screen and (max-width: 500px) {
+    .addCourseForm {
+        width: 90%;
+
+    }
+}
